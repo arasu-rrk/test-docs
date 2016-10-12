@@ -1,0 +1,23 @@
+<div class="row">
+	<div class="label label-primary">
+		<i class="fa fa-label"></i>
+		<span class="version">{{ include.version }}</span>
+	</div>
+	<div class="label label-default">
+		<i class="fa fa-calendar"></i>
+		<span class="date">{{ include.date }}</span>
+	</div>
+	{% if page.url|downcase contains "release-notes"%}
+	<div class="dropdown" id="releasenotes-type">
+		<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu">
+			<li><a value="all">All</a></li>
+			<li><a value="features">Features</a></li>
+			<li><a value="bug-fixes">Bug Fixes</a></li>
+			<li><a value="breaking-changes">Breaking Changes</a></li>
+		</ul>
+	</div>
+	{%endif%}
+</div>

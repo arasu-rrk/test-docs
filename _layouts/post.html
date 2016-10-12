@@ -1,0 +1,30 @@
+{% include header.html %}
+<div class="help-content">
+	<div class="left-toc">
+		<div class="left-toc-content">
+			<ul class="treeview"></ul>
+		</div>
+	</div>
+
+{% capture documentation %}{{page.documentation | downcase}}{% endcapture %}
+	{% if documentation == "api"%}		
+		<div class="api"></div>
+	{% endif %}
+	<div class="post">		
+		{% if documentation == "ug"%}	
+			<div id="rightsidetoc"></div>
+		{% endif %}
+
+		<div class="post-content">
+		{{ content }}
+		</div>
+		
+		{% include footer.html %}
+	
+</div>
+</div>
+
+<div id="back-top" title="Back to Top"><i class="fa fa-angle-up"></i></div>	
+
+</body>
+</html>

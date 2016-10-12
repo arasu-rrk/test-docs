@@ -1,0 +1,5 @@
+- platformname: report-server
+  jsontoc: report-server-toc
+  
+- platformname: dashboard-platform
+  jsontoc: dashboard-platform-toc
