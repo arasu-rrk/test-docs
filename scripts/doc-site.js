@@ -445,3 +445,106 @@ function tabSelect(lang) {
     })
 }
 
+function DropdownRefresh(selected)
+{
+	if($("#no-change").length>0)
+	{
+		// var ua = window.navigator.userAgent;
+		// var msie = ua.indexOf("Trident/");
+		// if (msie > 0) // If Internet Explorer, return version number
+		// {
+			// document.getElementById("no-change").removeNode();
+		// }
+		//else{
+			var nochangediv = document.getElementById("no-change");
+                    nochangediv.parentNode.removeChild(nochangediv);
+		//}
+	}
+	if(selected == null || selected == ""){
+		selected = "all";
+	}
+	ReleaseNotesSelction(selected);
+	history.pushState({}, "", window.location.pathname + "?type=" + selected + window.location.hash);
+	var $div = $("a[value="+selected+"]").parent().parent().parent(); 
+	var $btn = $div.find('button');
+	$btn.html("<span class=\"selected\">"+$("a[value="+selected+"]").text() + '</span> <span class="caret"></span>');
+	$div.removeClass('open');
+	$('#rightsidetoc').toc({
+		listType : 'ol',
+		headers	 : "h2:visible",
+		minimumHeaders:1
+	});
+	$("#rightsidetoc").removeClass("hide");
+	if($(".post-content h2:visible").length<=0){
+		if(selected == "all"){
+			selected = "Changes";
+		}
+		$(".post-content").append("<div id='no-change' class='alert alert-info'>No "+selected+" for this product in this version.</div>");
+		$("#rightsidetoc").addClass("hide");
+	}
+	return false;
+}
+
+$(document).on("click", ".dropdown-menu li a", function (event) {
+	event.preventDefault();
+	var selected = $(this).attr("value");
+	DropdownRefresh(selected);
+});
+
+
+function ReleaseNotesSelction(selected) {
+	$("h2").removeClass("hide");
+	var isBugFixes = false;
+	var isFeatures = false;
+	var isBreakingChng = false;
+	var isKnowIssues = false;
+	var elements = $('div.post-content').children();
+	for (var i = 0; i < elements.length; i++) {
+		if (elements[i].id.indexOf("bug") >= 0) {
+			isBugFixes = true;
+			isFeatures = false;
+			isBreakingChng = false;
+			isKnowIssues = false;
+		} else if (elements[i].id.indexOf("feature") >= 0) {
+			isBugFixes = false;
+			isFeatures = true;
+			isBreakingChng = false;
+			isKnowIssues = false;
+		} else if (elements[i].id.indexOf("break") >= 0) {
+			isBugFixes = false;
+			isFeatures = false;
+			isBreakingChng = true;
+			isKnowIssues = false;
+		} else if (elements[i].id.indexOf("known") >= 0) {
+			isBugFixes = false;
+			isFeatures = false;
+			isBreakingChng = false;
+			isKnowIssues = true;
+		}else if (elements[i].id.indexOf("behavior") >= 0) {
+			$(elements[i]).addClass("hide");
+			isBugFixes = false;
+			isFeatures = false;
+			isBreakingChng = false;
+			isKnowIssues = false;
+		}
+
+		if (elements[i].localName.indexOf("h2") < 0 && elements[i].localName.indexOf("h1") < 0 && elements[i].className.indexOf("release-date") < 0) {
+			if ((isBreakingChng || isFeatures || isKnowIssues) && selected == "bug-fixes") {
+				$(elements[i]).addClass("hide");
+			} else if ((isBreakingChng || isBugFixes || isKnowIssues) && selected == "features") {
+				$(elements[i]).addClass("hide");
+			} else if ((isBugFixes || isFeatures || isKnowIssues) && selected == "breaking-changes") {
+				$(elements[i]).addClass("hide");
+			} else if ((isBugFixes || isFeatures || isBreakingChng) && selected == "knownissues") {
+				$(elements[i]).addClass("hide");
+			} else {
+				$(elements[i]).removeClass("hide");
+			}
+
+		}
+	}
+	var h2Elements =$( "h2" ) .filter(function( index ) { return !$(this).nextUntil("h2").is(":visible") }) 
+	$(h2Elements).addClass("hide");
+	
+}
+
