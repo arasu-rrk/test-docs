@@ -69,6 +69,12 @@ function tabs() {
 }
 
 function onload() {
+	
+	if(window.location.pathname.indexOf("release-notes") >= 0)
+	{
+			DropdownRefresh(getQueryStringByName("type", window.location.href));
+
+	}
     languageTab();
     init();
     premalink();
@@ -445,20 +451,27 @@ function tabSelect(lang) {
     })
 }
 
+function getQueryStringByName(name, url) {
+	if (!url)
+		url = window.location.href;
+	url = url.toLowerCase(); // This is just to avoid case sensitiveness
+	name = name.replace(/[\[\]]/g, "\\$&").toLowerCase(); // This is just to avoid case sensitiveness for query parameter name
+	var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+	results = regex.exec(url);
+	if (!results)
+		return null;
+	if (!results[2])
+		return '';
+	return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+
 function DropdownRefresh(selected)
 {
 	if($("#no-change").length>0)
 	{
-		// var ua = window.navigator.userAgent;
-		// var msie = ua.indexOf("Trident/");
-		// if (msie > 0) // If Internet Explorer, return version number
-		// {
-			// document.getElementById("no-change").removeNode();
-		// }
-		//else{
 			var nochangediv = document.getElementById("no-change");
                     nochangediv.parentNode.removeChild(nochangediv);
-		//}
 	}
 	if(selected == null || selected == ""){
 		selected = "all";
